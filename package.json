@@ -1,8 +1,31 @@
 {
   "name": "pickl",
   "version": "0.1.0",
-  "type": "module",
   "description": "A boilerplate project that integrates Playwright with Cucumber/Gherkin for BDD test automation",
+  "keywords": [
+    "playwright",
+    "cucumber",
+    "bdd",
+    "testing",
+    "automation",
+    "gherkin"
+  ],
+  "homepage": "https://github.com/qualitysoftwares1-cpu/PICKL#readme",
+  "bugs": {
+    "url": "https://github.com/qualitysoftwares1-cpu/PICKL/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/qualitysoftwares1-cpu/PICKL.git"
+  },
+  "license": "MIT",
+  "author": "Jed Aureus Gonzales",
+  "type": "module",
+  "main": "cucumber.js",
+  "directories": {
+    "doc": "docs",
+    "test": "test"
+  },
   "scripts": {
     "clean": "node -e \"require('fs').rmSync('test-results', {recursive: true, force: true})\"",
     "clean:all": "tsx scripts/cleanup.ts",
@@ -26,31 +49,12 @@
     "verify:hooks": "sh scripts/verify-hooks.sh",
     "prepare": "husky"
   },
-  "keywords": [
-    "playwright",
-    "cucumber",
-    "bdd",
-    "testing",
-    "automation",
-    "gherkin"
-  ],
-  "lint-staged": {
-    "*.{js,ts}": [
-      "eslint --fix",
-      "prettier --write"
-    ],
-    "*.{json,md}": [
-      "prettier --write"
-    ]
-  },
-  "author": "Jed Aureus Gonzales",
-  "license": "MIT",
-  "overrides": {
-    "semver": "^7.6.0"
+  "dependencies": {
+    "cucumber": "^6.0.7"
   },
   "devDependencies": {
-    "@cucumber/cucumber": "^12.5.0",
-    "@playwright/test": "^1.57.0",
+    "@cucumber/cucumber": "^9.6.0",
+    "@playwright/test": "^1.58.1",
     "@types/debug": "^4.1.12",
     "@types/node": "^25.0.6",
     "c8": "^10.1.3",
@@ -68,5 +72,17 @@
     "tsx": "^4.21.0",
     "typescript": "^5.9.3",
     "typescript-eslint": "^8.52.0"
+  },
+  "overrides": {
+    "semver": "^7.6.0"
+  },
+  "lint-staged": {
+    "*.{js,ts}": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "*.{json,md}": [
+      "prettier --write"
+    ]
   }
 }

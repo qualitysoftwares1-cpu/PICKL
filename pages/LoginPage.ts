@@ -2,98 +2,82 @@ import { Locator, Page } from '@playwright/test'
 
 /**
  * Page Object Model for the Login page
- * URL: https://the-internet.herokuapp.com/login
  */
 export class LoginPage {
   readonly page: Page
   readonly usernameInput: Locator
   readonly passwordInput: Locator
   readonly loginButton: Locator
+  readonly dashboardHeader: Locator
   readonly flashMessage: Locator
-  readonly pageHeading: Locator
+  readonly fieldErrorMessage: Locator
 
   constructor(page: Page) {
     this.page = page
-    this.usernameInput = page.locator('#username')
-    this.passwordInput = page.locator('#password')
+    this.usernameInput = page.locator('input[name="username"]')
+    this.passwordInput = page.locator('input[name="password"]')
     this.loginButton = page.locator('button[type="submit"]')
-    this.flashMessage = page.locator('#flash')
-    this.pageHeading = page.locator('h2')
+    this.dashboardHeader = page.locator('div.oxd-topbar-header-title h6')
+    this.flashMessage = page.locator('div.oxd-alert-content')
+    this.fieldErrorMessage = page.locator('form > div:nth-of-type(2) span')
   }
 
-  /**
-   * Navigate to the login page
-   */
+  /** Navigate to login page */
   async goto() {
-    await this.page.goto('/login')
+    await this.page.goto('https://opensource-demo.orangehrmlive.com/web/index.php')
   }
 
-  /**
-   * Enter username into the username field
-   * @param username - The username to enter
-   */
+  /** Enter username */
+  // ...existing code...
+  /** Enter username */
   async enterUsername(username: string) {
     await this.usernameInput.fill(username)
   }
 
-  /**
-   * Enter password into the password field
-   * @param password - The password to enter
-   */
+  /** Enter password */
   async enterPassword(password: string) {
     await this.passwordInput.fill(password)
   }
-
-  /**
-   * Click the login button
-   */
+  // ...existing code...
+  /** Click login button */
   async clickLogin() {
     await this.loginButton.click()
   }
 
-  /**
-   * Perform complete login action
-   * @param username - The username to login with
-   * @param password - The password to login with
-   */
+  /** Complete login action */
   async login(username: string, password: string) {
     await this.enterUsername(username)
     await this.enterPassword(password)
     await this.clickLogin()
   }
 
-  /**
-   * Get the flash message text (success or error)
-   * @returns The flash message text without the close button
-   */
+  /** Check if on dashboard page */
+  async isOnDashboard(): Promise<boolean> {
+    await this.page.waitForLoadState('networkidle')
+    const currentUrl = this.page.url()
+    return currentUrl.includes('/web/index.php/dashboard/index')
+  }
+
+  /** Check if dashboard header is visible and correct */
+  async isDashboardHeaderVisible(): Promise<boolean> {
+    await this.dashboardHeader.waitFor({ state: 'visible' })
+    const text = await this.dashboardHeader.innerText()
+    return text?.trim() === 'Dashboard'
+  }
+
+  /** Get flash message text */
   async getFlashMessage(): Promise<string> {
-    const text = await this.flashMessage.textContent()
-    return text?.replace('×', '').trim() ?? ''
+    await this.flashMessage.waitFor({ state: 'visible' })
+    return (await this.flashMessage.innerText()).trim()
   }
 
-  /**
-   * Get the current page heading text
-   * @returns The page heading text
-   */
-  async getPageHeading(): Promise<string> {
-    return (await this.pageHeading.textContent()) ?? ''
+  async getFieldErrorMessage(): Promise<string> {
+    await this.fieldErrorMessage.waitFor({ state: 'visible' })
+    return (await this.fieldErrorMessage.innerText()).trim()
   }
 
-  /**
-   * Check if currently on the login page
-   * @returns True if on login page, false otherwise
-   */
-  async isOnLoginPage(): Promise<boolean> {
-    const heading = await this.getPageHeading()
-    return heading.includes('Login Page')
-  }
-
-  /**
-   * Check if currently on the secure area page
-   * @returns True if on secure area, false otherwise
-   */
-  async isOnSecureArea(): Promise<boolean> {
-    const heading = await this.getPageHeading()
-    return heading.includes('Secure Area')
+  /** Check if currently on the login page */
+  isOnLoginPage(): boolean {
+    return this.page.url().includes('/web/index.php/auth/login')
   }
 }

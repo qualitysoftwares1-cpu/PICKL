@@ -2,32 +2,22 @@
 import { execSync } from 'child_process'
 import 'dotenv/config'
 
-// Parse command line arguments
-const args = process.argv.slice(2)
-let featurePath = 'test/features/'
-let cliTags = ''
+// CLI feature path and tags (optional)
+const featurePath = 'test/features/recruitment.feature'
+const tags = process.argv.includes('--tags')
+  ? process.argv[process.argv.indexOf('--tags') + 1]
+  : 'not @skip'
 
-// Process arguments
-for (let i = 0; i < args.length; i++) {
-  const arg = args[i]
-  if (arg === '--tags' && args[i + 1]) {
-    cliTags = args[i + 1] ?? ''
-    i++ // Skip next argument as it's the tag value
-  } else if (arg && !arg.startsWith('--')) {
-    featurePath = arg
-  }
+// Build the command
+const command = `npx cross-env NODE_OPTIONS="--import tsx --import dotenv/config" cucumber-js --config cucumber.js --import "test/support/**/*.ts" --import "test/steps/**/*.ts" --format "./test/support/verbose-formatter.ts" --format "json:test-results/cucumber-report.json" --tags "${tags}" "${featurePath}"`
+
+// eslint-disable-next-line no-console
+console.log('Executing command:', command)
+
+try {
+  execSync(command, { stdio: 'inherit' })
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+} catch (error) {
+  console.error('Test execution failed')
+  process.exit(1)
 }
-
-// CLI tags take precedence over environment variable
-const tagsOption = cliTags || process.env.TAGS ? `--tags "${cliTags || process.env.TAGS}"` : ''
-
-// Get existing NODE_OPTIONS or start with tsx/dotenv imports
-const baseNodeOptions = '--import tsx --import dotenv/config'
-const existingNodeOptions = process.env.NODE_OPTIONS ?? ''
-const nodeOptions = existingNodeOptions
-  ? `${baseNodeOptions} ${existingNodeOptions}`
-  : baseNodeOptions
-
-const command = `cross-env NODE_OPTIONS="${nodeOptions}" cucumber-js --config cucumber.js --import 'test/support/**/*.ts' --import 'test/steps/**/*.ts' --format ./test/support/verbose-formatter.ts --format json:test-results/cucumber-report.json ${tagsOption} ${featurePath}`
-
-execSync(command, { stdio: 'inherit' })

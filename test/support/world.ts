@@ -1,4 +1,4 @@
-import { World, IWorldOptions } from '@cucumber/cucumber'
+import { IWorldOptions, World } from '@cucumber/cucumber'
 import { BrowserContext, Page } from '@playwright/test'
 
 /**

@@ -38,6 +38,11 @@ export default defineConfig({
     /* Take screenshot of failure */
     screenshot: 'only-on-failure',
 
+    /* 👇 ADD THIS ONLY */
+    launchOptions: {
+      args: ['--start-maximized', '--window-position=1920,0'],
+    },
+
     /* Record Video - disabled in debug mode */
     video:
       process.env.HEADLESS === 'false'

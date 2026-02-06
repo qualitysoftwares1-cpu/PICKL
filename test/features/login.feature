@@ -9,45 +9,41 @@ Feature: Login Functionality
 
   @positive
   Scenario: Successful login with valid credentials
-    When I enter username "tomsmith"
-    And I enter password "SuperSecretPassword!"
+    When I enter valid credentials "validUsername" and "validPassword"
     And I click the login button
-    Then I should see the secure area page
-    And I should see a success message "You logged into a secure area!"
+    Then I should be redirected to the Dashboard page with its URL
+    And I should see the header Dashboard
 
   @negative
   Scenario: Failed login with invalid username
-    When I enter username "invaliduser"
-    And I enter password "SuperSecretPassword!"
+    When I enter invalid username "invalidUsername" and a valid password "validPassword"
     And I click the login button
-    Then I should see an error message "Your username is invalid!"
+    Then I should see an error message Invalid Credentials
     And I should remain on the login page
 
   @negative
   Scenario: Failed login with invalid password
-    When I enter username "tomsmith"
-    And I enter password "wrongpassword"
+    When I enter invalid password "invalidPassword" and a valid username "validUsername"
     And I click the login button
-    Then I should see an error message "Your password is invalid!"
+    Then I should see an error message Invalid Credentials
     And I should remain on the login page
 
   @negative
   Scenario: Failed login with empty credentials
-    When I click the login button
-    Then I should see an error message "Your username is invalid!"
+    When I enter credentials empty "emptyUsername" and "emptyPassword"
+    And I click the login button
+    Then I should see an error Fields are Required
     And I should remain on the login page
 
   @negative
   Scenario: Login with special characters in username
-    When I enter username "user@123!"
-    And I enter password "SuperSecretPassword!"
+    When I enter credentials with special characters "specialCharUsername" and "validPassword"
     And I click the login button
-    Then I should see an error message "Your username is invalid!"
+    Then I should see an error message Invalid Credentials
 
   @fail @skip
   Scenario: Intentional failing test for demonstration
-    When I enter username "tomsmith"
-    And I enter password "SuperSecretPassword!"
+    When I enter valid credentials "validUsername" and "validPassword"
     And I click the login button
-    Then I should see a success message "This message will never appear"
+    Then I should be redirected to the Dashboard page with its URL
     And I should remain on the login page
