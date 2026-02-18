@@ -18,7 +18,7 @@ export class LoginPage {
     this.passwordInput = page.locator('input[name="password"]')
     this.loginButton = page.locator('button[type="submit"]')
     this.dashboardHeader = page.locator('div.oxd-topbar-header-title h6')
-    this.flashMessage = page.locator('div.oxd-alert-content')
+    this.flashMessage = page.locator('div.oxd-alert p')
     this.fieldErrorMessage = page.locator('form > div:nth-of-type(2) span')
   }
 

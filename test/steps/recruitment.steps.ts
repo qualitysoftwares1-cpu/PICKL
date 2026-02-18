@@ -89,7 +89,7 @@ Then(
     const recruitmentPage = new RecruitmentPage(this.page!)
 
     await recruitmentPage.clickCandidateHiringManager()
-    const manager = TEST_DATA.hiringManagers[2]! // replace index with random if needed
+    const manager = TEST_DATA.hiringManagers[5]! // replace index with random if needed
     await recruitmentPage.selectCandidateHiringManager(manager)
   },
 )
@@ -105,7 +105,7 @@ Then('I should select the Status from Candidates Form', async function (this: IC
 Then('I should enter the Candidate Name from Candidates Form', async function (this: ICustomWorld) {
   const recruitmentPage = new RecruitmentPage(this.page!)
 
-  const candidateName = TEST_DATA.candidateFirstNames[9]! // first name
+  const candidateName = TEST_DATA.candidateFirstNames[10]! // first name
   await recruitmentPage.enterCandidateName(candidateName)
   await recruitmentPage.selectCandidateName(candidateName)
 })
@@ -206,7 +206,7 @@ Then(
   'I should evaluate if all the list is having the same hiring manager as selected in the filter',
   async function (this: ICustomWorld) {
     const recruitmentPage = new RecruitmentPage(this.page!)
-    const expectedHiringManager = normalizeName(getFirstAndLastName(TEST_DATA.hiringManagers[2]))
+    const expectedHiringManager = normalizeName(getFirstAndLastName(TEST_DATA.hiringManagers[5]))
     const actualHiringManagers = await recruitmentPage.getCandidateHiringManagerList()
 
     console.log('\n     |    Candidate Record List Text:', actualHiringManagers)
