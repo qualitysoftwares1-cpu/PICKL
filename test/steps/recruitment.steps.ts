@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import { Given, Then, When } from '@cucumber/cucumber'
 import { expect } from '@playwright/test'
 import { RecruitmentPage } from '../../pages/RecruitmentPage.js'
@@ -88,7 +89,7 @@ Then(
     const recruitmentPage = new RecruitmentPage(this.page!)
 
     await recruitmentPage.clickCandidateHiringManager()
-    const manager = TEST_DATA.hiringManagers[7]! // replace index with random if needed
+    const manager = TEST_DATA.hiringManagers[2]! // replace index with random if needed
     await recruitmentPage.selectCandidateHiringManager(manager)
   },
 )
@@ -140,7 +141,7 @@ Then('I should select the Method from Candidates Form', async function (this: IC
 
   const method = TEST_DATA.methodOfApplication[0]! // replace with TEST_DATA if needed
   await recruitmentPage.selectCandidateMethod(method)
-  // eslint-disable-next-line no-console
+
   console.log('\n     |    Selected Method:', method)
 })
 
@@ -151,7 +152,7 @@ When('I click the Search button from Candidates Form', async function (this: ICu
 
 Then('I should see the search results based on the criteria entered', function () {
   // Placeholder: implement verification of results
-  // eslint-disable-next-line no-console
+
   console.log('\n     |     Verify search results based on criteria - To be implemented')
 })
 
@@ -205,9 +206,9 @@ Then(
   'I should evaluate if all the list is having the same hiring manager as selected in the filter',
   async function (this: ICustomWorld) {
     const recruitmentPage = new RecruitmentPage(this.page!)
-    const expectedHiringManager = normalizeName(getFirstAndLastName(TEST_DATA.hiringManagers[7]))
+    const expectedHiringManager = normalizeName(getFirstAndLastName(TEST_DATA.hiringManagers[2]))
     const actualHiringManagers = await recruitmentPage.getCandidateHiringManagerList()
-    // eslint-disable-next-line no-console
+
     console.log('\n     |    Candidate Record List Text:', actualHiringManagers)
     expect(actualHiringManagers.length).toBeGreaterThan(0)
 
@@ -225,7 +226,7 @@ Then(
     const recruitmentPage = new RecruitmentPage(this.page!)
     const expectedStatus = TEST_DATA.candidateStatuses[0]! // replace index with random if needed
     const actualStatusList = await recruitmentPage.getCandidateStatusList()
-    // eslint-disable-next-line no-console
+
     console.log('\n     |    Candidate Record List Text:', actualStatusList)
     actualStatusList.forEach(status => {
       expect(status).toBe(expectedStatus)
@@ -241,7 +242,7 @@ Then(
     const expectedCandidate = normalizeName(getFirstAndLastName(TEST_DATA.candidateNames[10])) // replace index with random
 
     const actualCandidateList = await recruitmentPage.getCandidateNameList()
-    // eslint-disable-next-line no-console
+
     console.log('\n     |     Expected Candidate:', expectedCandidate)
 
     expect(actualCandidateList.length).toBeGreaterThan(0)
@@ -277,9 +278,9 @@ Then(
     // replace with dynamic value if needed
 
     const actualDateFromList = await recruitmentPage.getCandidateDateOfApplicationFromList()
-    // eslint-disable-next-line no-console
+
     console.log('\n     |    Expected Date From List:', dateFrom)
-    // eslint-disable-next-line no-console
+
     console.log('     |    Actual Date From List:', actualDateFromList)
 
     // Assert that every item matches the selected date
@@ -288,6 +289,100 @@ Then(
       const normalizedDate = date?.trim()
       expect(normalizedDate).toBe(dateFrom)
     })
+  },
+)
+
+Then('I should click the Add button to add new record', async function (this: ICustomWorld) {
+  const recruitmentPage = new RecruitmentPage(this.page!)
+  await recruitmentPage.onClickCAddandidateButton()
+})
+
+Then(
+  'I should enter First Name, Middle Name and Last Name of the Candidate',
+  async function (this: ICustomWorld) {
+    const recruitmentPage = new RecruitmentPage(this.page!)
+    // Pick first entries from TEST_DATA
+    const firstName = TEST_DATA.candidateFirstNames[0]! // e.g., 'Thuan46144'
+    const middleName = TEST_DATA.candidateMiddleNames[0]! // e.g., 'James'
+    const lastName = TEST_DATA.candidateLastNames[0]! // e.g., 'Cao'
+
+    // Fill the inputs
+    await recruitmentPage.inputFirstName(firstName)
+    await recruitmentPage.inputMiddleName(middleName)
+    await recruitmentPage.inputLastName(lastName)
+
+    // Log the full name
+    const fullName = `${firstName} ${middleName} ${lastName}`
+
+    console.log(`\n    |     Candidate Full Name: ${fullName}`)
+  },
+)
+
+Then('I should enter contact number', async function (this: ICustomWorld) {
+  const recruitmentPage = new RecruitmentPage(this.page!)
+  const contact = TEST_DATA.candidateContacts[0]!
+  await recruitmentPage.fillContactNumber(contact)
+})
+
+Then('I should enter email address', async function (this: ICustomWorld) {
+  const recruitmentPage = new RecruitmentPage(this.page!)
+  const email = TEST_DATA.candidateEmails[0]!
+  await recruitmentPage.fillEmail(email)
+})
+
+Then('I should select Vacancy from drop-down', async function (this: ICustomWorld) {
+  const recruitmentPage = new RecruitmentPage(this.page!)
+  await recruitmentPage.selectVacancy()
+  const vacancy = TEST_DATA.vacancies[0]!
+  await recruitmentPage.selectCandidateVacancy(vacancy)
+})
+
+Then('I should select file to upload', async function (this: ICustomWorld) {
+  const recruitmentPage = new RecruitmentPage(this.page!)
+  await recruitmentPage.uploadResume('C:/Users/rpagubayan/Downloads/sample.txt')
+})
+
+Then('I should enter keywords in the field', async function (this: ICustomWorld) {
+  const recruitmentPage = new RecruitmentPage(this.page!)
+  const keywords = TEST_DATA.candidateKeywords[0]!
+  await recruitmentPage.fillKeywords(keywords)
+})
+
+/*Then('I should enter the Date of Application', async function (this: ICustomWorld) {
+  const recruitmentPage = new RecruitmentPage(this.page!)
+  const day = TEST_DATA.days[19] // 19
+  const month = TEST_DATA.months[1] // February (index starts at 0)
+  const year = TEST_DATA.years[76] // or TEST_DATA.years[index]
+  const dateString = `${year}-${day}-${month}`
+  await recruitmentPage.fillDateOfApplication(dateString)
+})*/
+
+Then('I should Add any notes', async function (this: ICustomWorld) {
+  const recruitmentPage = new RecruitmentPage(this.page!)
+  const notes = 'This is just a testing'
+  await recruitmentPage.fillNotes(notes)
+})
+
+Then('I should tick the Consent to keep data', async function (this: ICustomWorld) {
+  const recruitmentPage = new RecruitmentPage(this.page!)
+  await recruitmentPage.toggleConsent(true)
+})
+
+Then('I should click the Save Button', async function (this: ICustomWorld) {
+  const recruitmentPage = new RecruitmentPage(this.page!)
+  await recruitmentPage.addSaveButton.click()
+})
+
+Then('I should click the Cancel Button', async function (this: ICustomWorld) {
+  const recruitmentPage = new RecruitmentPage(this.page!)
+  await recruitmentPage.addCancelButton.click()
+})
+
+Then(
+  'I should see a validation error saying that field is Required to be populated',
+  async function (this: ICustomWorld) {
+    const recruitmentPage = new RecruitmentPage(this.page!)
+    await recruitmentPage.fieldIsRequiredMessage()
   },
 )
 

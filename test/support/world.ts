@@ -6,6 +6,8 @@ import { BrowserContext, Page } from '@playwright/test'
  * Provides typed access to Playwright browser instances and context.
  */
 export interface ICustomWorld extends World {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  browser: any
   /** Playwright Page instance for browser automation */
   page?: Page
   /** Playwright BrowserContext for managing browser state and cookies */
@@ -30,4 +32,6 @@ export class CustomWorld extends World implements ICustomWorld {
   constructor(options: IWorldOptions) {
     super(options)
   }
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  browser: any
 }

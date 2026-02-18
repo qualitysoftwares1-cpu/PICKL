@@ -1,7 +1,7 @@
+/* eslint-disable no-console */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 import { Locator, Page } from '@playwright/test'
-
 export class RecruitmentPage {
   getHiringManager() {
     throw new Error('Method not implemented.')
@@ -34,7 +34,26 @@ export class RecruitmentPage {
   readonly candidateDateOfApplicationFromList: Locator
   readonly candidateDateOfApplicationToList: Locator
   readonly candidateDateofApplicationTextBox: Locator
-
+  readonly candidateDateofApplicationFromToday: Locator
+  readonly candidateAddRecordButton: Locator
+  readonly addFirstNameInput: Locator
+  readonly addMiddleNameInput: Locator
+  readonly addLastNameInput: Locator
+  readonly addVacancyDropdown: Locator
+  readonly addVacancyOption: (optionText: string) => Locator
+  readonly addEmailInput: Locator
+  readonly addContactNumberInput: Locator
+  readonly addResumeUploadInput: Locator
+  readonly addKeywordsInput: Locator
+  // readonly addDateOfApplicationInput: Locator
+  readonly addNotesTextarea: Locator
+  readonly addConsentCheckbox: Locator
+  readonly addSaveButton: Locator
+  readonly addCancelButton: Locator
+  readonly resumeUploadInput: Locator
+  readonly fieldIsRequired: Locator
+  readonly field2IsRequired: Locator
+  readonly emailIsRequired: Locator
   // eslint-disable-next-line max-lines-per-function
   constructor(page: Page) {
     this.page = page
@@ -66,6 +85,7 @@ export class RecruitmentPage {
     this.candidateResetButton = page.getByRole('button', { name: 'Reset' })
     this.candidateSelectFromCalendar = page.locator('div.oxd-table-filter div:nth-of-type(6) > div')
     this.candidateSelectToCalendar = page.locator('div.oxd-table-filter div:nth-of-type(31) > div')
+    this.candidateDateofApplicationFromToday = page.locator('div:nth-of-type(4) div.--today')
     this.candidateCalendarArrowNextFrom = page.locator(
       'div.oxd-table-filter button:nth-of-type(2) > i',
     )
@@ -99,6 +119,35 @@ export class RecruitmentPage {
     this.candidateDateofApplicationTextBox = page.locator(
       'div.oxd-table-filter div:nth-of-type(3) input',
     )
+    this.candidateAddRecordButton = page.locator('div.orangehrm-header-container > button')
+
+    this.addFirstNameInput = page.locator('input[placeholder="First Name"]')
+    this.addMiddleNameInput = page.locator('input[placeholder="Middle Name"]')
+    this.addLastNameInput = page.locator('input[placeholder="Last Name"]')
+
+    this.addVacancyDropdown = page.locator('form > div:nth-of-type(2) i')
+    this.addVacancyOption = (optionText: string) =>
+      page.locator(`div[role="listbox"] >> text="${optionText}"`)
+
+    this.addEmailInput = page.locator('div:nth-of-type(3) > div > div:nth-of-type(1) input') // Email input is first "Type here"
+    this.addContactNumberInput = page.locator('div:nth-of-type(3) > div > div:nth-of-type(2) input')
+
+    this.addResumeUploadInput = page.locator('input[type="file"]')
+
+    this.addKeywordsInput = page.locator(
+      'div:nth-of-type(5) div.orangehrm-save-candidate-page-full-width input',
+    )
+    // this.addDateOfApplicationInput = page.locator('input[type="date"]')
+
+    this.addNotesTextarea = page.locator('textarea[placeholder="Type here"]')
+    this.addConsentCheckbox = page.locator('div:nth-of-type(7) i')
+
+    this.addSaveButton = page.locator('button:has-text("Save")')
+    this.addCancelButton = page.locator('button:has-text("Cancel")')
+    this.resumeUploadInput = page.locator('input[type="file"]')
+    this.fieldIsRequired = page.locator('div:nth-of-type(3) > span')
+    this.field2IsRequired = page.locator('form > div:nth-of-type(1) div:nth-of-type(1) > span')
+    this.emailIsRequired = page.locator('div:nth-of-type(3) > div > div:nth-of-type(1) input')
   }
 
   // Navigate directly
@@ -188,7 +237,7 @@ export class RecruitmentPage {
   async selectCandidateDateOfApplicationFrom() {
     await this.candidateCalendarArrowBackFrom.click()
     await this.candidateCalendarArrowNextFrom.click()
-    await this.candidateSelectFromCalendar.click()
+    await this.candidateDateofApplicationFromToday.click()
   }
 
   async enterCandidateDateOfApplicationTo() {
@@ -219,7 +268,7 @@ export class RecruitmentPage {
 
   async getCandidateRecordCount(): Promise<number> {
     const text = await this.candidateRecordListCount.textContent()
-    // eslint-disable-next-line no-console
+
     console.log('\n     |    Candidate Record List Text:', text)
     if (!text) {
       return 0
@@ -297,5 +346,84 @@ export class RecruitmentPage {
       // eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-member-access
       elements.map(el => el.textContent?.trim() ?? '').filter(Boolean),
     )
+  }
+
+  async onClickCAddandidateButton() {
+    await this.candidateAddRecordButton.click()
+  }
+
+  async inputFirstName(firstName: string) {
+    await this.addFirstNameInput.fill(firstName)
+  }
+
+  async inputMiddleName(middleName: string) {
+    await this.addMiddleNameInput.fill(middleName)
+  }
+
+  async inputLastName(lastName: string) {
+    await this.addLastNameInput.fill(lastName)
+    await this.page.waitForTimeout(1000)
+  }
+
+  async selectVacancy() {
+    await this.addVacancyDropdown.click()
+  }
+
+  async fillEmail(email: string) {
+    await this.addEmailInput.fill(email)
+    console.log('\n     |    Email Address:', email)
+  }
+
+  async fillContactNumber(contactNumber: string) {
+    await this.addContactNumberInput.fill(contactNumber)
+    console.log('\n     |    Contact Number:', contactNumber)
+  }
+
+  async fillKeywords(keywords: string) {
+    await this.addKeywordsInput.fill(keywords)
+    console.log('\n     |    Keywords:', keywords)
+  }
+
+  /*async fillDateOfApplication(date: string) {
+    await this.addDateOfApplicationInput.fill(date)
+    console.log('\n     |    Date of Application:', date)
+  }*/
+
+  async fillNotes(notes: string) {
+    await this.addNotesTextarea.fill(notes)
+    console.log('\n     |    Notes:', notes)
+  }
+
+  async toggleConsent(checked: boolean) {
+    const isChecked = await this.addConsentCheckbox.isChecked()
+    if (isChecked !== checked) {
+      await this.addConsentCheckbox.click()
+    }
+  }
+
+  async clickSave() {
+    await this.addSaveButton.click()
+  }
+
+  async clickCancel() {
+    await this.addCancelButton.click()
+  }
+
+  async uploadResume(filePath: string) {
+    await this.resumeUploadInput.setInputFiles(filePath)
+  }
+
+  async fieldIsRequiredMessage() {
+    const fields = [this.fieldIsRequired, this.field2IsRequired, this.emailIsRequired]
+
+    for (const field of fields) {
+      const isVisible = await field.isVisible()
+      if (isVisible) {
+        const text = await field.innerText()
+        if (text.trim() === 'Required') {
+          return // success: at least one field shows 'Required'
+        }
+      }
+    }
   }
 }

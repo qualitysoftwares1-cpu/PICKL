@@ -60,7 +60,7 @@ export class LoginPage {
 
   /** Check if dashboard header is visible and correct */
   async isDashboardHeaderVisible(): Promise<boolean> {
-    await this.dashboardHeader.waitFor({ state: 'visible' })
+    await this.dashboardHeader.waitFor({ state: 'visible', timeout: 5000 })
     const text = await this.dashboardHeader.innerText()
     return text?.trim() === 'Dashboard'
   }
