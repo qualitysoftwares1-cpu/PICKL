@@ -89,7 +89,7 @@ Then(
     const recruitmentPage = new RecruitmentPage(this.page!)
 
     await recruitmentPage.clickCandidateHiringManager()
-    const manager = TEST_DATA.hiringManagers[5]! // replace index with random if needed
+    const manager = TEST_DATA.hiringManagers[12]! // replace index with random if needed
     await recruitmentPage.selectCandidateHiringManager(manager)
   },
 )
@@ -206,7 +206,7 @@ Then(
   'I should evaluate if all the list is having the same hiring manager as selected in the filter',
   async function (this: ICustomWorld) {
     const recruitmentPage = new RecruitmentPage(this.page!)
-    const expectedHiringManager = normalizeName(getFirstAndLastName(TEST_DATA.hiringManagers[5]))
+    const expectedHiringManager = normalizeName(getFirstAndLastName(TEST_DATA.hiringManagers[12]))
     const actualHiringManagers = await recruitmentPage.getCandidateHiringManagerList()
 
     console.log('\n     |    Candidate Record List Text:', actualHiringManagers)
